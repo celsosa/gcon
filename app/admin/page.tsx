@@ -1,9 +1,11 @@
-import React from 'react'
+"use client";
+import withAdmin from '../../components/withAdmin';
 
-function page() {
+function AdminPage() {
   return (
-    <div>page</div>
+    <div className='text-white text-2xl'>ADMIN PAGE</div>
   )
 }
 
-export default page
+export default withAdmin(AdminPage);
+

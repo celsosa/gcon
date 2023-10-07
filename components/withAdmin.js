@@ -1,27 +1,57 @@
-// withAdmin.js
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { supabase } from "path/to/your/supabaseClient";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+function useAdminRedirect() {
+  const supabase = createClientComponentClient();
+  const [isChecking, setIsChecking] = useState(true);
+  const router = useRouter(); // Usando useRouter
+
+  useEffect(() => {
+    async function checkUserRole() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      // Check if user is authenticated
+      if (!user) {
+        router.push("/login"); // Usando router.push
+        setIsChecking(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("perfil_usuarios")
+        .select("tipo")
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("Failed to fetch user profile:", error);
+        router.push("/");
+        setIsChecking(false);
+        return;
+      }
+
+      if (data[0].tipo !== "admin") {
+        router.push("/unauthorized");
+      }
+      setIsChecking(false);
+    }
+
+    checkUserRole();
+  }, [supabase]);
+
+  return isChecking;
+}
 
 export default function withAdmin(Component) {
   return function WrappedComponent(props) {
-    const router = useRouter();
-
-    useEffect(() => {
-      async function checkUserRole() {
-        const user = supabase.auth.user();
-        const { data } = await supabase
-          .from("perfil_usuarios")
-          .select("tipo")
-          .eq("user_id", user.id);
-        if (data[0].tipo !== "admin") {
-          router.push("/unauthorized");
-        }
-      }
-
-      checkUserRole();
-    }, []);
-
+    const isChecking = useAdminRedirect();
+    if (isChecking) {
+      return <div className="text-white text-2xl">Checking user role...</div>;
+    }
     return <Component {...props} />;
   };
 }
