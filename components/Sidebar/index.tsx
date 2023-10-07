@@ -178,7 +178,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                             </clipPath>
                                         </defs>
                                     </svg>
-                                    Condominíos
+                                    Condomínios
                                 </Link>
                             </li>
                             {/* <!-- Menu Item Tables --> */}

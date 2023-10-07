@@ -2,7 +2,7 @@ import React from 'react'
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumbs';
 import { Metadata } from "next";
 export const metadata: Metadata = {
-    title: "Condominios | Painel GCon",
+    title: "Condomínios | Painel GCon",
     description: "Página de gerenciamento de condomínios",
     // other metadata
 };
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 function page() {
     return (
         <>
-            <Breadcrumb pageName="Condominios" />
+            <Breadcrumb pageName="Condomínios" />
             <div>CONDOMINIOS TEST</div>
         </>
 
