@@ -1,11 +1,13 @@
 "use client";
-import withAdmin from '../../components/withAdmin';
+//import withAdmin from '@/components/withAdmin';
+//import ECommerce from "@/components/Dashboard/E-commerce";
 
-function AdminPage() {
+function Home() {
   return (
-    <div className='text-white text-2xl'>ADMIN PAGE</div>
-  )
+    <>
+      <div>TESTE HOME DASHBOARD</div>
+    </>
+  );
 }
 
-export default withAdmin(AdminPage);
-
+export default Home;

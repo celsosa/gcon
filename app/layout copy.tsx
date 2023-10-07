@@ -1,6 +1,4 @@
 import './globals.css'
-import "./data-tables-css.css";
-import "./satoshi.css";
 
 export const metadata = {
   title: 'Create Next App',
@@ -14,9 +12,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-
-      <body suppressHydrationWarning={true}>
-        <main className="min-h-screen w-full flex flex-col ">
+      <body>
+        <main className="min-h-screen bg-background flex flex-col items-center">
           {children}
         </main>
       </body>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Loader from "@/components/common/Loader";
 
 function useAdminRedirect() {
   const supabase = createClientComponentClient();
@@ -50,7 +51,7 @@ export default function withAdmin(Component) {
   return function WrappedComponent(props) {
     const isChecking = useAdminRedirect();
     if (isChecking) {
-      return <div className="text-white text-2xl">Checking user role...</div>;
+      return <Loader />;
     }
     return <Component {...props} />;
   };
