@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import withAdmin from "@/components/withAdmin"; // Importe o HOC
 
+
 function AdminLayout({
     children,
 }: {

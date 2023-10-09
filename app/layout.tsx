@@ -1,6 +1,7 @@
 import './globals.css'
 import "./data-tables-css.css";
 import "./satoshi.css";
+import { UserProfileProvider } from '@/contexts/UserProfileContext';
 
 export const metadata = {
   title: 'Create Next App',
@@ -13,13 +14,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <UserProfileProvider>
+      <html lang="en">
 
-      <body suppressHydrationWarning={true}>
-        <main className="min-h-screen w-full flex flex-col ">
-          {children}
-        </main>
-      </body>
-    </html>
+        <body suppressHydrationWarning={true}>
+          <main className="min-h-screen w-full flex flex-col ">
+            {children}
+          </main>
+        </body>
+      </html>
+    </UserProfileProvider>
   )
 }

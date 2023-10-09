@@ -1,5 +1,7 @@
 import React from 'react'
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumbs';
+import CondInfo from './components/CondInfo';
+
 import { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Condomínios | Painel GCon",
@@ -7,14 +9,15 @@ export const metadata: Metadata = {
     // other metadata
 };
 
-function page() {
+function CondominiosPage() {
+
     return (
         <>
             <Breadcrumb pageName="Condomínios" />
-            <div>CONDOMINIOS TEST</div>
+            <CondInfo />
         </>
 
     )
 }
 
-export default page
+export default CondominiosPage

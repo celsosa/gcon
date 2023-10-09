@@ -1,12 +1,12 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+"use client"
 import Link from 'next/link'
 import LogoutButton from '../components/LogoutButton'
 import SupabaseLogo from '../components/SupabaseLogo'
 import NextJsLogo from '../components/NextJsLogo'
 import DeployButton from '../components/DeployButton'
+import { useUserProfile } from '@/contexts/UserProfileContext'
+import { useEffect } from 'react'
 
-export const dynamic = 'force-dynamic'
 
 const resources = [
   {
@@ -39,12 +39,20 @@ const examples = [
   { type: 'Route Handlers', src: 'app/_examples/route-handler.ts' },
 ]
 
-export default async function Index() {
-  const supabase = createServerComponentClient({ cookies })
+export default function Index() {
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { userProfile: user, isLoading, errorProfile } = useUserProfile();
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+    }
+  }, [user]);
+
+  console.log(user)
+
+  if (isLoading) {
+    return <div>Carregando perfil...</div>;
+  }
 
   return (
     <div className="w-full flex flex-col items-center bg-black justify-center z-99999">
