@@ -1,29 +1,22 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers'
+import { Condominio } from '@/app/types';
+import Link from 'next/link';
 
-async function CondInfo() {
-    const supabase = createServerComponentClient({ cookies });
+interface CondListProps {
+    condominios: Condominio[] | null;
+    userType: string
+}
 
-    const { data: condominios } = await supabase
-        .from('condominios')
-        .select(`
-    id,
-    created_at,
-    nome,
-    endereco,
-    contato,
-    perfil_id
-  `)
+function CondList({ condominios, userType }: CondListProps) {
 
-
-    if (!condominios) return <div>Não há condomínios para serem exibidos, por favor adicione um.</div>
+    if (condominios?.length === 0 && userType == 'admin') return <div>Não há condomínios para serem exibidos, por favor adicione um.</div>
+    if (condominios?.length === 0 && userType == 'cliente') return <div>Não há condomínios para serem exibidos.</div>
 
     return (
         <>
             <div>
                 {condominios?.map(condominio => (
-                    <>
-                        <div key={condominio.id} className="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:scale-105 active:scale-100 duration-300">
+                    <Link key={condominio.id} href={`/admin/condominios/${condominio.id}`}>
+                        <div className="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:scale-105 active:scale-100 duration-300">
                             <img className="w-full" src="/images/condominios/condominio-sustentavel.jpg" alt={condominio.nome} />
                             <div className="px-6 py-4">
                                 <div className="font-bold text-xl mb-2">{condominio.nome}</div>
@@ -38,11 +31,11 @@ async function CondInfo() {
                                 <span className="inline-block bg-bodydark1 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
                             </div>
                         </div>
-                    </>
+                    </Link>
                 ))}
             </div>
         </>
     )
 }
 
-export default CondInfo
+export default CondList

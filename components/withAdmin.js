@@ -35,7 +35,7 @@ function useAdminRedirect() {
         return;
       }
 
-      if (data[0].tipo !== "admin") {
+      if (data[0].tipo !== "admin" && data[0].tipo !== "cliente") {
         router.push("/unauthorized");
       }
       setIsChecking(false);

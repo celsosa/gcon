@@ -4,7 +4,9 @@ import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 
+
 const Header = (props: {
+    email: string | undefined;
     sidebarOpen: string | boolean | undefined;
     setSidebarOpen: (arg0: boolean) => void;
 }) => {
@@ -106,7 +108,7 @@ const Header = (props: {
 
 
                     {/* <!-- User Area --> */}
-                    <DropdownUser />
+                    <DropdownUser email={props.email} />
                     {/* <!-- User Area --> */}
                 </div>
             </div>

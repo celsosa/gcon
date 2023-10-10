@@ -6,6 +6,7 @@ import NextJsLogo from '../components/NextJsLogo'
 import DeployButton from '../components/DeployButton'
 import { useUserProfile } from '@/contexts/UserProfileContext'
 import { useEffect } from 'react'
+import { UserProfileHook } from './types'
 
 
 const resources = [
@@ -41,7 +42,8 @@ const examples = [
 
 export default function Index() {
 
-  const { userProfile: user, isLoading, errorProfile } = useUserProfile();
+  const { userProfile: user, isLoading, errorProfile } = useUserProfile() as UserProfileHook;
+
   useEffect(() => {
     if (user) {
       console.log(user);

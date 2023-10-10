@@ -5,7 +5,8 @@ import Loader from "@/components/common/Loader";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import withAdmin from "@/components/withAdmin"; // Importe o HOC
-
+import { useUserProfile } from "@/contexts/UserProfileContext";
+import { UserProfileHook } from "../types";
 
 function AdminLayout({
     children,
@@ -14,13 +15,14 @@ function AdminLayout({
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const { userProfile: user, isLoading, errorProfile } = useUserProfile() as UserProfileHook;
 
     useEffect(() => {
         setTimeout(() => setLoading(false), 1000);
     }, []);
 
     return (
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
+        <div className="dark:bg-boxdark-2 dark:text-bodydark flex flex-col">
             {loading ? (
                 <Loader />
             ) : (
@@ -35,17 +37,21 @@ function AdminLayout({
                     {/* <!-- ===== Content Area Start ===== --> */}
                     <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
                         {/* <!-- ===== Header Start ===== --> */}
-                        <Header
-                            sidebarOpen={sidebarOpen}
-                            setSidebarOpen={setSidebarOpen}
-                        />
+
+                        {isLoading ?
+                            <Loader /> :
+                            <Header
+                                sidebarOpen={sidebarOpen}
+                                setSidebarOpen={setSidebarOpen}
+                                email={user?.email || 'Entre'}
+                            />
+                        }
+
                         {/* <!-- ===== Header End ===== --> */}
 
                         {/* <!-- ===== Main Content Start ===== --> */}
-                        <main>
-                            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                                {children}
-                            </div>
+                        <main className="mx-auto max-w-screen-2xl w-full h-full p-4 md:p-6 2xl:p-10">
+                            {children}
                         </main>
                         {/* <!-- ===== Main Content End ===== --> */}
                     </div>

@@ -1,26 +1,58 @@
-import Link from "next/link";
-interface BreadcrumbProps {
-    pageName: string;
+'use client'
+
+import React, { ReactNode } from 'react'
+
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
+type TBreadCrumbProps = {
+    homeElement?: ReactNode,
+    separator: ReactNode,
+    customPath?: string,
+    containerClasses?: string,
+    listClasses?: string,
+    activeClasses?: string,
+    capitalizeLinks?: boolean
 }
-const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
+
+const Breadcrumb = ({ homeElement, separator, customPath, containerClasses, listClasses, activeClasses, capitalizeLinks }: TBreadCrumbProps) => {
+
+    const paths = usePathname()
+
+    const pathNames = paths.split('/').filter(path => path)
+
+    if (customPath) {
+        pathNames[pathNames.length - 1] = customPath;
+    }
+
+
     return (
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-title-md2 font-semibold text-black dark:text-white">
-                {pageName}
-            </h2>
+        <div>
+            <ul className={containerClasses}>
+                <li className={listClasses}><Link href={'/'}>{homeElement}</Link></li>
+                {
+                    pathNames.map((link, index) => {
+                        let href = `/${pathNames.slice(0, index + 1).join('/')}`
+                        let itemClasses = href.split('/').pop() === pathNames[pathNames.length - 1] ? `${listClasses} ${activeClasses}` : listClasses;
+                        let itemLink = capitalizeLinks ? link[0].toUpperCase() + link.slice(1, link.length) : link
+                        return (
+                            <React.Fragment key={index}>
+                                {index < pathNames.length - 1 ? (
+                                    <li className={itemClasses} >
+                                        <Link href={href}>{itemLink}</Link>
+                                    </li>
+                                ) :
+                                    (<li className={itemClasses} >
+                                        {itemLink}
+                                    </li>)}
+                                {pathNames.length !== index + 1 && separator}
+                            </React.Fragment>
+                        )
+                    })
+                }
+            </ul>
+        </div >
+    )
+}
 
-            <nav>
-                <ol className="flex items-center gap-2">
-                    <li>
-                        <Link className="font-medium" href="/admin">
-                            <span className="hover:opacity-50 duration-300">Dashboard</span> /
-                        </Link>
-                    </li>
-                    <li className="font-medium text-primary">{pageName}</li>
-                </ol>
-            </nav>
-        </div>
-    );
-};
-
-export default Breadcrumb;
+export default Breadcrumb
