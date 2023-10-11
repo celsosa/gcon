@@ -6,7 +6,13 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import withAdmin from "@/components/withAdmin"; // Importe o HOC
 import { useUserProfile } from "@/contexts/UserProfileContext";
-import { UserProfileHook } from "../types";
+import { Database } from "../types/supabase";
+
+type UserProfileHook = {
+    userProfile: Database['public']['Tables']['perfil_usuarios']['Row'] | null;
+    isLoading: boolean;
+    errorProfile: any; // ou um tipo mais específico se você souber o formato do erro
+};
 
 function AdminLayout({
     children,
@@ -35,7 +41,7 @@ function AdminLayout({
                     {/* <!-- ===== Sidebar End ===== --> */}
 
                     {/* <!-- ===== Content Area Start ===== --> */}
-                    <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+                    <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-[#F8FAFC] dark:bg-boxdark-2">
                         {/* <!-- ===== Header Start ===== --> */}
 
                         {isLoading ?

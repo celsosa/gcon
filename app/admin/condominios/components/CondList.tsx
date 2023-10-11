@@ -1,6 +1,7 @@
-import { Condominio } from '@/app/types';
+import { Database } from '@/app/types/supabase';
 import Link from 'next/link';
 
+type Condominio = Database['public']['Tables']['condominios']['Row'];
 interface CondListProps {
     condominios: Condominio[] | null;
     userType: string
@@ -13,10 +14,10 @@ function CondList({ condominios, userType }: CondListProps) {
 
     return (
         <>
-            <div>
+            <div className='w-fit'>
                 {condominios?.map(condominio => (
                     <Link key={condominio.id} href={`/admin/condominios/${condominio.id}`}>
-                        <div className="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:scale-105 active:scale-100 duration-300">
+                        <div className="max-w-sm w-fit rounded overflow-hidden shadow-lg hover:scale-105 active:scale-100 duration-300">
                             <img className="w-full" src="/images/condominios/condominio-sustentavel.jpg" alt={condominio.nome} />
                             <div className="px-6 py-4">
                                 <div className="font-bold text-xl mb-2">{condominio.nome}</div>
@@ -32,6 +33,7 @@ function CondList({ condominios, userType }: CondListProps) {
                             </div>
                         </div>
                     </Link>
+
                 ))}
             </div>
         </>

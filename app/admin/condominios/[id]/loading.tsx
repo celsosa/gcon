@@ -1,8 +1,9 @@
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumbs'
+import LoaderComponent from '@/components/common/LoaderComponent'
 
 function loading() {
     return (
-        <>
+        <div className="flex flex-1 flex-col h-full">
             <Breadcrumb
                 separator={<span> / </span>}
                 customPath={"Serviços"}
@@ -12,8 +13,8 @@ function loading() {
                 capitalizeLinks
             />
 
-            <div>Carregando serviços...</div>
-        </>
+            <LoaderComponent />
+        </div>
 
     )
 }
