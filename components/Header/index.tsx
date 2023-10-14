@@ -107,7 +107,7 @@ const Header = (props: {
                     </ul>
 
 
-                    {/* <!-- User Area --> */}
+                    {/* <!-- User Area edited --> */}
                     <DropdownUser email={props.email} />
                     {/* <!-- User Area --> */}
                 </div>
