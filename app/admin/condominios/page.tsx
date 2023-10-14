@@ -2,13 +2,20 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers'
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumbs';
 import CondList from './components/CondList';
-
+import { Database } from '@/app/types/supabase';
 import { Metadata } from "next";
+
 export const metadata: Metadata = {
     title: "Condomínios | GCon",
     description: "Página de gerenciamento de condomínios",
     // other metadata
 };
+type Condominio = Database['public']['Tables']['condominios']['Row'];
+interface CondominioWithEmail extends Condominio {
+    perfil_usuarios: {
+        email: string;
+    }[];
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +38,7 @@ async function CondominiosPage() {
     // Se o tipo do usuário não for administrador, filtre os condomínios por perfil_id
     let condominiosData;
     if (userProfile?.tipo !== 'admin') {
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from('condominios')
             .select(`
                 id,
@@ -39,12 +46,13 @@ async function CondominiosPage() {
                 nome,
                 endereco,
                 contato,
-                perfil_id
+                perfil_id,
+                perfil_usuarios ( email )
             `)
             .eq('perfil_id', userProfile?.id); // Agora estamos usando o ID do perfil para filtrar
-        condominiosData = data;
+        condominiosData = data as CondominioWithEmail[];
     } else {
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from('condominios')
             .select(`
                 id,
@@ -52,15 +60,17 @@ async function CondominiosPage() {
                 nome,
                 endereco,
                 contato,
-                perfil_id
+                perfil_id,
+                  perfil_usuarios ( email )
             `);
-        condominiosData = data;
+        condominiosData = data as CondominioWithEmail[];
     }
 
-
+    //console.log(condominiosData, 'condominiosData')
 
     return (
         <div className='flex flex-col'>
+
             <Breadcrumb
                 separator={<span> / </span>}
                 activeClasses='text-primary'

@@ -8,7 +8,6 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Serviços | GCon",
     description: "Página de serviços GCon.",
-    // other metadata
 
 };
 
@@ -24,13 +23,28 @@ interface ServicosProps {
 export default async function Servicos({ params }: ServicosProps) {
 
     const supabase = createServerComponentClient({ cookies });
-    const { data: servicos, error } = await supabase
+
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data: userProfile } = await supabase
+        .from('perfil_usuarios')
+        .select('id, tipo')
+        .eq('user_id', user?.id)
+        .single();
+
+
+    const { data: servicos, error: servicosError } = await supabase
         .from('servicos')
         .select('*')
         .eq('condominio_id', params.id);
 
-    console.log(servicos, 'servicos')
-    console.log(error, 'servicos')
+    const { data: condominioData, error: condominioError } = await supabase
+        .from('condominios')
+        .select('nome')
+        .eq('id', params.id)
+        .single();
+
+    const nomeDoCondominio = condominioData?.nome;
+
 
     return (
         <div className='flex flex-col'>
@@ -42,7 +56,7 @@ export default async function Servicos({ params }: ServicosProps) {
                 listClasses='text-xl mx-2 font-semibold text-black dark:text-white hover:text-primary'
                 capitalizeLinks
             />
-            <ServiceList servicos={servicos} />
+            <ServiceList servicos={servicos} condominioNome={nomeDoCondominio} condominioId={params.id} userType={userProfile?.tipo} />
         </div>
     );
 }

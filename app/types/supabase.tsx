@@ -80,13 +80,13 @@ export interface Database {
           anexo_nota: string | null
           condominio_id: number
           created_at: string
-          data_pagamento: string | null
           data_servico: string
+          datas_pagamentos: string[] | null
           descricao: string
           id: number
           id_nota: number | null
           nome: string
-          status_pagamento: string
+          status_pagamento: string | null
           valor_nota: number
           valor_pago: number | null
         }
@@ -95,13 +95,13 @@ export interface Database {
           anexo_nota?: string | null
           condominio_id: number
           created_at?: string
-          data_pagamento?: string | null
           data_servico: string
+          datas_pagamentos?: string[] | null
           descricao: string
           id?: number
           id_nota?: number | null
           nome: string
-          status_pagamento: string
+          status_pagamento?: string | null
           valor_nota: number
           valor_pago?: number | null
         }
@@ -110,13 +110,13 @@ export interface Database {
           anexo_nota?: string | null
           condominio_id?: number
           created_at?: string
-          data_pagamento?: string | null
           data_servico?: string
+          datas_pagamentos?: string[] | null
           descricao?: string
           id?: number
           id_nota?: number | null
           nome?: string
-          status_pagamento?: string
+          status_pagamento?: string | null
           valor_nota?: number
           valor_pago?: number | null
         }
