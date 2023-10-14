@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AiOutlinePlus } from 'react-icons/ai';
 import Modal from "./Modal";
 import ServiceForm from "./ServiceForm";
-import { useUserProfile } from "@/contexts/UserProfileContext";
 
 type Servico = Database['public']['Tables']['servicos']['Row'];
 interface ServiceListProps {
@@ -13,16 +12,9 @@ interface ServiceListProps {
     condominioId: number;
     userType: string;
 }
-type UserProfileHook = {
-    userProfile: Database['public']['Tables']['perfil_usuarios']['Row'] | null;
-    isLoading: boolean;
-    errorProfile: any;
-};
 
 
 function ServiceList({ servicos, condominioNome, condominioId, userType }: ServiceListProps) {
-
-    const { userProfile: user, isLoading, errorProfile } = useUserProfile() as UserProfileHook;
 
     const [serviceData, setServiceData] = useState<Database['public']['Tables']['servicos']['Row'] | null>(null);
 
