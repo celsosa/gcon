@@ -6,7 +6,7 @@ import Image from "next/image";
 
 
 const Header = (props: {
-    email: string | undefined;
+    email: string;
     sidebarOpen: string | boolean | undefined;
     setSidebarOpen: (arg0: boolean) => void;
 }) => {
