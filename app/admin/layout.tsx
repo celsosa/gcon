@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import withAdmin from "@/components/withAdmin"; // Importe o HOC
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { Database } from "../types/supabase";
+import { ToastContainer } from 'react-toastify';
 
 type UserProfileHook = {
     userProfile: Database['public']['Tables']['perfil_usuarios']['Row'] | null;
@@ -29,6 +30,7 @@ function AdminLayout({
 
     return (
         <div className="dark:bg-boxdark-2 dark:text-bodydark flex flex-col">
+            <ToastContainer />
             {loading ? (
                 <Loader />
             ) : (

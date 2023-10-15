@@ -1,6 +1,6 @@
 'use client'
 import { Database } from "@/app/types/supabase";
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Modal from "./Modal";
 import ServiceForm from "./ServiceForm";
@@ -12,7 +12,6 @@ interface ServiceListProps {
     condominioId: number;
     userType: string;
 }
-
 
 function ServiceList({ servicos, condominioNome, condominioId, userType }: ServiceListProps) {
 
@@ -27,6 +26,11 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
     }
     const [showModal, setShowModal] = useState(false);
 
+    function closeModal() {
+        setShowModal(false);
+        setServiceData(null);
+    }
+
     return (
         <div className="flex flex-col">
 
@@ -34,13 +38,24 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
             <Modal showModal={showModal} setShowModal={setShowModal}>
                 <div className="relative p-6 flex-auto">
                     <p className="my-4 text-body text-base leading-relaxed">
-                        <ServiceForm serviceData={serviceData} onUpdate={(data) => setServiceData(data)} condominioId={condominioId} />
+                        <ServiceForm
+                            onReset={() => setServiceData(null)}
+                            serviceData={serviceData}
+                            onUpdate={(data) => setServiceData(data)}
+                            condominioId={condominioId}
+                            setShowModal={setShowModal}
+                        />
+
                     </p>
                 </div>
             </Modal>
 
             {userType == 'admin' &&
-                <button type="button" onClick={() => setShowModal(true)}
+                <button type="button"
+                    onClick={() => {
+                        setShowModal(true);
+                        setServiceData(null);  // Adicionado para redefinir serviceData
+                    }}
                     className="w-fit uppercase text-sm inline-flex mb-5 leading-none items-center rounded-sm shadow hover:shadow-lg justify-center gap-2.5 bg-meta-3 hover:bg-opacity-90 active:bg-success ease-linear py-1 px-5 text-center font-medium text-white transition-all duration-150 lg:px-6 xl:px-7"
                 >
                     <span className="text-xl">

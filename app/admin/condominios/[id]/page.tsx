@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 
 };
 
+export const dynamic = 'force-dynamic'
+
 type Servico = Database['public']['Tables']['servicos']['Row'];
 
 interface ServicosProps {
