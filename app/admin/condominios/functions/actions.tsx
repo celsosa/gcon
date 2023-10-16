@@ -33,4 +33,5 @@ export const removeService = async (serviceId: number) => {
         .delete()
         .eq('id', serviceId);
     if (error) throw error;
+    revalidatePath('/admin/condominios/[id]')
 };

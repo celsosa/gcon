@@ -1,9 +1,10 @@
 'use client'
 import React, { useState } from 'react';
-import { addService, updateService, removeService } from '../functions/actions';
+import { addService, updateService } from '../functions/actions';
 import { Database } from '@/app/types/supabase';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 
 interface ServiceFormProps {
@@ -42,6 +43,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceData, onUpdate, onRese
         onUpdate(data);
     };
 
+    /*
     const handleRemove = async (event: React.FormEvent) => {
         event.preventDefault();
         if (serviceData?.id) {
@@ -49,7 +51,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceData, onUpdate, onRese
             onUpdate(null);
         }
     };
-
+*/
     const handleAddDate = (event: React.MouseEvent) => {
         event.preventDefault();
         const newDate = (document.getElementById('dataPagamento') as HTMLInputElement).value;
@@ -81,13 +83,14 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceData, onUpdate, onRese
             let response;
             if (serviceData?.id) {
                 response = await handleUpdate(serviceData.id, serviceDataToSubmit as UpdatedServiceData);
+                toast.success('Serviço atualizado com sucesso');
             } else {
                 response = await handleAdd(serviceDataToSubmit as NewServiceData);
+                toast.success('Serviço adicionado com sucesso');
             }
 
             // Se chegou aqui, a operação foi bem-sucedida
             setShowModal(false);  // Fecha o modal se a ação foi bem-sucedida
-            toast.success('Serviço adicionado com sucesso');
             onUpdate(serviceDataToSubmit);  // Atualiza os dados
 
         } catch (error) {
@@ -107,12 +110,12 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceData, onUpdate, onRese
                     <input type="text" id='nome' value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome" className='p-2 border rounded' />
                 </div>
                 <div className='flex flex-col'>
-                    <label htmlFor='descricao' className='mb-1 text-sm font-bold'>Descrição</label>
-                    <textarea id='descricao' value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição" className='p-2 border rounded'></textarea>
-                </div>
-                <div className='flex flex-col'>
                     <label htmlFor='dataServico' className='mb-1 text-sm font-bold'>Data do Serviço</label>
                     <input type="date" id='dataServico' value={dataServico} onChange={(e) => setDataServico(e.target.value)} className='p-2 border rounded' />
+                </div>
+                <div className='flex flex-col col-span-2'>
+                    <label htmlFor='descricao' className='mb-1 text-sm font-bold'>Descrição</label>
+                    <textarea id='descricao' value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição" className='p-2 border rounded'></textarea>
                 </div>
                 <div className='flex flex-col'>
                     <label htmlFor='idNota' className='mb-1 text-sm font-bold'>Nº da Nota</label>
@@ -151,15 +154,26 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceData, onUpdate, onRese
                 </div>
             </div>
             <div className="flex items-center justify-end p-6 border-t border-solid border-strokedark mt-5 rounded-b">
-                <button
-                    className="bg-meta-3 hover:bg-opacity-90 active:bg-success disabled:cursor-auto disabled:bg-success disabled:shadow-none text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading && serviceData ? 'Atualizando...'
-                        : loading && !serviceData ? 'Adicionando...'
-                            : (serviceData ? 'Atualizar' : 'Adicionar')}
-                </button>
+                {loading && serviceData ?
+                    <div className='flex gap-3'>
+                        <AiOutlineLoading3Quarters className="animate-spin text-2xl text-primary" />
+                        <span>Atualizando dados...</span>
+                    </div>
+                    : loading && !serviceData ?
+                        <div className='flex gap-3'>
+                            <AiOutlineLoading3Quarters className="animate-spin text-2xl text-primary" />
+                            <span>Adicionando...</span>
+                        </div>
+                        :
+                        <button
+                            className="bg-meta-3 hover:bg-opacity-90 active:bg-success disabled:cursor-auto disabled:bg-success disabled:shadow-none text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {serviceData ? 'Atualizar' : 'Adicionar'}
+                        </button>
+                }
+
 
             </div>
         </form>

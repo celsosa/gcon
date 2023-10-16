@@ -58,7 +58,7 @@ function AdminLayout({
                         {/* <!-- ===== Header End ===== --> */}
 
                         {/* <!-- ===== Main Content Start ===== --> */}
-                        <main className="mx-auto max-w-screen-2xl w-full h-full p-4 md:p-6 2xl:p-10">
+                        <main className="mx-auto max-w-screen-2xl w-full p-4 md:p-6 2xl:p-10 mb-10">
                             {children}
                         </main>
                         {/* <!-- ===== Main Content End ===== --> */}

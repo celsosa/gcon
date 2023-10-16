@@ -1,9 +1,15 @@
 'use client'
 import { Database } from "@/app/types/supabase";
-import React, { useState, useEffect } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Modal from "./Modal";
 import ServiceForm from "./ServiceForm";
+import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi';
+import { AiFillWarning, AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { Menu, Transition } from '@headlessui/react'
+import { Fragment, JSX, SVGProps, useState } from 'react'
+import { removeService } from "../functions/actions";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Servico = Database['public']['Tables']['servicos']['Row'];
 interface ServiceListProps {
@@ -12,6 +18,7 @@ interface ServiceListProps {
     condominioId: number;
     userType: string;
 }
+
 
 function ServiceList({ servicos, condominioNome, condominioId, userType }: ServiceListProps) {
 
@@ -31,11 +38,51 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
         setServiceData(null);
     }
 
+    const handleEditService = (service: Servico) => {
+        setShowModal(true);
+        setServiceData(service);
+    };
+
+
+    const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
+    const [serviceToRemove, setServiceToRemove] = useState<Servico | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    // Atualize sua função handleRemoveService para definir o serviço a ser removido
+    const handleRemoveService = (service: Servico) => {
+        setServiceToRemove(service);
+        setShowDeleteConfirmationModal(true);
+    };
+
+    const handleConfirmDelete = async (service: Servico | null) => {
+        setLoading(true)
+        try {
+            if (service && service.id) {
+                await removeService(service.id);
+                // Após a remoção bem-sucedida, você pode atualizar a lista de serviços aqui.
+                // Pode ser necessário chamar uma função que busca os serviços novamente.
+                toast.success('Serviço removido com sucesso.');
+            }
+        } catch (error) {
+            console.error('Erro ao remover o serviço: ', error);
+        } finally {
+            setLoading(false);  // Reseta o estado de loading independentemente do sucesso ou falha
+        }
+
+        setShowDeleteConfirmationModal(false);
+        setServiceToRemove(null);
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteConfirmationModal(false);
+        setServiceToRemove(null);
+    };
+
     return (
         <div className="flex flex-col">
 
-
-            <Modal showModal={showModal} setShowModal={setShowModal}>
+            {/* Modal Insert/Edit service */}
+            <Modal showModal={showModal} setShowModal={setShowModal} name="Serviço">
                 <div className="relative p-6 flex-auto">
                     <p className="my-4 text-body text-base leading-relaxed">
                         <ServiceForm
@@ -50,11 +97,35 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                 </div>
             </Modal>
 
+            {/* Modal Remove service */}
+            <Modal showModal={showDeleteConfirmationModal} setShowModal={setShowDeleteConfirmationModal} name="Confirmação de Remoção">
+                <div className="flex flex-col relative p-6 items-center text-center text-body text-lg leading-none">
+                    <p className="text-lg font-semibold">
+                        <AiFillWarning className="inline text-2xl text-danger" />
+                        Tem certeza de que deseja remover este serviço?
+                    </p>
+                    <span className="text-base">(Essa ação não pode ser desfeita)</span>
+                    <div className="flex gap-10 my-6">
+                        {loading ?
+                            <AiOutlineLoading3Quarters className="animate-spin text-2xl text-primary" />
+                            : <>
+
+                                <button className="bg-body w-22 hover:bg-opacity-90 active:bg-graydark active:scale-95 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={handleCancelDelete}>Não</button>
+                                <button className="bg-danger w-22 hover:bg-opacity-80 active:bg-danger active:scale-95 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    onClick={() => handleConfirmDelete(serviceToRemove)}>
+                                    Sim
+                                </button>
+                            </>
+                        }
+                    </div>
+                </div>
+            </Modal>
+
             {userType == 'admin' &&
                 <button type="button"
                     onClick={() => {
                         setShowModal(true);
-                        setServiceData(null);  // Adicionado para redefinir serviceData
+                        setServiceData(null);
                     }}
                     className="w-fit uppercase text-sm inline-flex mb-5 leading-none items-center rounded-sm shadow hover:shadow-lg justify-center gap-2.5 bg-meta-3 hover:bg-opacity-90 active:bg-success ease-linear py-1 px-5 text-center font-medium text-white transition-all duration-150 lg:px-6 xl:px-7"
                 >
@@ -69,7 +140,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                     <h6>{condominioNome}</h6>
                 </div>
                 <div className="flex-auto px-0 pt-0 pb-2">
-                    <div className="p-0 overflow-x-auto">
+                    <div className="p-0 ">
                         <table className="items-center w-full mb-0 align-top border-bodydark text-body">
                             <thead className="align-bottom text-primary">
                                 <tr>
@@ -164,15 +235,78 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                                             </td>
                                             {userType == 'admin' &&
                                                 <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                                    <Menu as="div" className="relative inline-block text-left">
+                                                        <div>
+                                                            <Menu.Button className="inline-flex w-full justify-center rounded-md bg-primary bg-opacity-20 px-3 py-2 text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                                                                <PiDotsThreeOutlineVerticalFill />
+                                                            </Menu.Button>
+                                                        </div>
+                                                        <Transition
+                                                            as={Fragment}
+                                                            enter="transition ease-out duration-100"
+                                                            enterFrom="transform opacity-0 scale-95"
+                                                            enterTo="transform opacity-100 scale-100"
+                                                            leave="transition ease-in duration-75"
+                                                            leaveFrom="transform opacity-100 scale-100"
+                                                            leaveTo="transform opacity-0 scale-95"
+                                                        >
+                                                            <Menu.Items className="absolute right-0 z-99999 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                                <div onClick={() => handleEditService(servico)} className="px-1 py-1 ">
+                                                                    <Menu.Item>
+                                                                        {({ active }) => (
+                                                                            <button
+                                                                                className={`${active ? 'bg-graydark/30 text-white' : 'text-gray-900'
+                                                                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                                            >
+                                                                                {active ? (
+                                                                                    <EditActiveIcon
+                                                                                        className="mr-2 h-5 w-5"
+                                                                                        aria-hidden="true"
+                                                                                    />
+                                                                                ) : (
+                                                                                    <EditInactiveIcon
+                                                                                        className="mr-2 h-5 w-5"
+                                                                                        aria-hidden="true"
+                                                                                    />
+                                                                                )}
+                                                                                Edit
+                                                                            </button>
+                                                                        )}
+                                                                    </Menu.Item>
 
-                                                    <a href="javascript:;" className="font-semibold leading-tight text-xs text-slate-400">Edit</a>
+                                                                </div>
+
+                                                                <div onClick={() => handleRemoveService(servico)} className="px-1 py-1">
+                                                                    <Menu.Item>
+                                                                        {({ active }) => (
+                                                                            <button
+                                                                                className={`${active ? 'bg-graydark/30 text-white' : 'text-gray-900'
+                                                                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                                            >
+                                                                                {active ? (
+                                                                                    <DeleteActiveIcon
+                                                                                        className="mr-2 h-5 w-5 text-primary"
+                                                                                        aria-hidden="true"
+                                                                                    />
+                                                                                ) : (
+                                                                                    <DeleteInactiveIcon
+                                                                                        className="mr-2 h-5 w-5 text-primary"
+                                                                                        aria-hidden="true"
+                                                                                    />
+                                                                                )}
+                                                                                Delete
+                                                                            </button>
+                                                                        )}
+                                                                    </Menu.Item>
+                                                                </div>
+                                                            </Menu.Items>
+                                                        </Transition>
+                                                    </Menu>
                                                 </td>
                                             }
+
                                         </tr>
-
-
                                     </>
-
                                 ))}
                             </tbody>
                         </table>
@@ -185,3 +319,88 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
 }
 
 export default ServiceList;
+
+
+
+function EditInactiveIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M4 13V16H7L16 7L13 4L4 13Z"
+                fill="#EDE9FE"
+                stroke="#6370d8"
+                strokeWidth="2"
+            />
+        </svg>
+    )
+}
+
+function EditActiveIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M4 13V16H7L16 7L13 4L4 13Z"
+                fill="#3C50E0"
+                stroke="#7481dd"
+                strokeWidth="2"
+            />
+        </svg>
+    )
+}
+
+
+function DeleteInactiveIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <rect
+                x="5"
+                y="6"
+                width="10"
+                height="10"
+                fill="#EDE9FE"
+                stroke="#6370d8"
+                strokeWidth="2"
+            />
+            <path d="M3 6H17" stroke="#6370d8" strokeWidth="2" />
+            <path d="M8 6V4H12V6" stroke="#6370d8" strokeWidth="2" />
+        </svg>
+    )
+}
+
+function DeleteActiveIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <rect
+                x="5"
+                y="6"
+                width="10"
+                height="10"
+                fill="#3C50E0"
+                stroke="#7481dd"
+                strokeWidth="2"
+            />
+            <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
+            <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
+        </svg>
+    )
+}

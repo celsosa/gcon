@@ -4,10 +4,11 @@ import React, { ReactNode } from "react";
 interface ModalProps {
     children: ReactNode;
     showModal: boolean;
+    name: string,
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, showModal, setShowModal }) => {
+const Modal: React.FC<ModalProps> = ({ children, showModal, name, setShowModal }) => {
     return (
         <>
             {showModal ? (
@@ -20,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ children, showModal, setShowModal }) => {
                                 {/*header*/}
                                 <div className="flex items-start justify-between p-5 border-b border-solid border-strokedark rounded-t">
                                     <h3 className="text-2xl font-semibold">
-                                        Serviço
+                                        {name}
                                     </h3>
                                     <button
                                         className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
