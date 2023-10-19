@@ -185,7 +185,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                                             </td>
                                             <td className="p-2 text-center text-body align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <span className="flex font-semibold leading-tight text-xs text-slate-400 justify-center">
-                                                    <button onClick={() => window.open(servico.anexo_nota as string, "_blank")} className="hover:text-primary">
+                                                    <button onClick={() => window.open(servico.anexo_nota != null ? servico.anexo_nota : "https://gcon-one.vercel.app/admin", "_blank")} className="hover:text-primary">
                                                         <svg
                                                             className="fill-current"
                                                             width="18"
@@ -211,7 +211,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                                             </td>
                                             <td className="p-2 text-center text-body align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <span className="flex font-semibold leading-tight text-xs text-slate-400 justify-center">
-                                                    <button onClick={() => window.open(servico.anexo_comprovante as string, "_blank")} className="hover:text-primary">
+                                                    <button onClick={() => window.open(servico.anexo_comprovante != null ? servico.anexo_comprovante : "https://gcon-one.vercel.app/admin", "_blank")} className="hover:text-primary">
                                                         <svg
                                                             className="fill-current"
                                                             width="18"
