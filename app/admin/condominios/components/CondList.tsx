@@ -1,5 +1,10 @@
+'use client'
 import { Database } from '@/app/types/supabase';
 import Link from 'next/link';
+import { useState } from 'react';
+import Modal from './Modal';
+import CondForm from './CondForm';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 type Condominio = Database['public']['Tables']['condominios']['Row'];
 
@@ -16,11 +21,42 @@ interface CondListProps {
 
 function CondList({ condominios, userType }: CondListProps) {
 
+    const [showModal, setShowModal] = useState(false);
+    const [condData, setCondData] = useState<Database['public']['Tables']['condominios']['Row'] | null>(null);
+
+    const openAddCondominioModal = () => {
+        setShowModal(true);
+        setCondData(null);
+    };
+
     if (condominios?.length === 0 && userType == 'admin') return <div>Não há condomínios para serem exibidos, por favor adicione um.</div>
     if (condominios?.length === 0 && userType == 'cliente') return <div>Não há condomínios para serem exibidos.</div>
 
     return (
-        <div className="flex justify-center">
+        <div className="flex flex-col justify-center">
+
+            {/* Modal Insert Condomínio */}
+            <Modal showModal={showModal} setShowModal={setShowModal} name="Condomínio">
+                <div className="relative p-6 flex-auto">
+                    <p className="my-4 text-body text-base leading-relaxed">
+                        test
+                    </p>
+                </div>
+            </Modal>
+
+            {/* ADD COND BUTTON */}
+            {userType === 'admin' && (
+                <button
+                    type="button"
+                    onClick={openAddCondominioModal}
+                    className="w-fit uppercase text-sm inline-flex mb-5 leading-none items-center rounded-sm shadow hover:shadow-lg justify-center gap-2.5 bg-meta-3 hover:bg-opacity-90 active:bg-success ease-linear py-1 px-5 text-center font-medium text-white transition-all duration-150 lg:px-6 xl:px-7"
+                >
+                    <span className="text-xl">
+                        <AiOutlinePlus />
+                    </span>
+                    Adicionar condomínio
+                </button>
+            )}
             <div className='w-fit grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-5'>
                 {condominios?.map(condominio => (
                     <Link key={condominio.id} href={`/admin/condominios/${condominio.id}`}>

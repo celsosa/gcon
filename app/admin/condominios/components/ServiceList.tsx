@@ -139,7 +139,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                 <div className="p-6 pb-0 text-xl mb-4 font-medium rounded-t-2xl">
                     <h6>{condominioNome}</h6>
                 </div>
-                <div className="flex-auto px-0 pt-0 pb-2">
+                <div className="flex-auto px-0 pt-0 pb-2 overflow-x-auto">
                     <div className="p-0 ">
                         <table className="items-center w-full mb-0 align-top border-bodydark text-body">
                             <thead className="align-bottom text-primary">
@@ -179,11 +179,13 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                                                 <span className="font-semibold leading-tight text-xs text-slate-400">R${servico.valor_pago}</span>
                                             </td>
                                             <td className="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                                <span className="bg-gradient-to-tl from-success to-meta-3 px-3 text-xs rounded-sm py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{servico.status_pagamento}</span>
+                                                <span className={`bg-gradient-to-tl ${servico.status_pagamento === 'pago' ? 'from-success to-meta-3' : servico.status_pagamento === 'pendente' ? 'from-body to-bodydark' : servico.status_pagamento === 'parcial' ? 'from-meta-8 to-meta-6' : ''} px-3 text-xs rounded-sm py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white`}>
+                                                    {servico.status_pagamento}
+                                                </span>
                                             </td>
                                             <td className="p-2 text-center text-body align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <span className="flex font-semibold leading-tight text-xs text-slate-400 justify-center">
-                                                    <button onClick={() => window.open("https://www.google.com", "_blank")} className="hover:text-primary">
+                                                    <button onClick={() => window.open(servico.anexo_nota as string, "_blank")} className="hover:text-primary">
                                                         <svg
                                                             className="fill-current"
                                                             width="18"
@@ -209,7 +211,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                                             </td>
                                             <td className="p-2 text-center text-body align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <span className="flex font-semibold leading-tight text-xs text-slate-400 justify-center">
-                                                    <button onClick={() => window.open("https://www.google.com", "_blank")} className="hover:text-primary">
+                                                    <button onClick={() => window.open(servico.anexo_comprovante as string, "_blank")} className="hover:text-primary">
                                                         <svg
                                                             className="fill-current"
                                                             width="18"
