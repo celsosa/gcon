@@ -139,7 +139,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                 <div className="p-6 pb-0 text-xl mb-4 font-medium rounded-t-2xl">
                     <h6>{condominioNome}</h6>
                 </div>
-                <div className="flex-auto px-0 pt-0 pb-2 overflow-x-auto">
+                <div className="flex-auto px-0 pt-0 pb-2">
                     <div className="p-0 ">
                         <table className="items-center w-full mb-0 align-top border-bodydark text-body">
                             <thead className="align-bottom text-primary">
