@@ -79,7 +79,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
     };
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
 
             {/* Modal Insert/Edit service */}
             <Modal showModal={showModal} setShowModal={setShowModal} name="Serviço">
@@ -135,7 +135,7 @@ function ServiceList({ servicos, condominioNome, condominioId, userType }: Servi
                     Adicionar serviço
                 </button>
             }
-            <div className="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-xl rounded-2xl bg-clip-border">
+            <div className="relative flex flex-col w-full pb-10 break-words overflow-x-scroll overflow-y-visible bg-white border-0 border-transparent border-solid shadow-xl rounded-2xl bg-clip-border">
                 <div className="p-6 pb-0 text-xl mb-4 font-medium rounded-t-2xl">
                     <h6>{condominioNome}</h6>
                 </div>
