@@ -39,12 +39,7 @@ function CondList({ condominios, userType }: CondListProps) {
             <Modal showModal={showModal} setShowModal={setShowModal} name="Condomínio">
                 <div className="relative p-6 flex-auto">
                     <p className="my-4 text-body text-base leading-relaxed">
-                        <CondForm
-                            onReset={() => setCondData(null)}
-                            condData={condData}
-                            onUpdate={(data) => setCondData(data)}
-                            setShowModal={setShowModal}
-                        />
+                        test form
                     </p>
                 </div>
             </Modal>
