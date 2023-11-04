@@ -43,12 +43,11 @@ const Login: React.FC = () => {
                 />
               </Link>
 
-              { /* 
+
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+                Sistema de administração financeira GCon.
               </p>
-*/}
+
               <span className="mt-15 inline-block">
                 <svg
                   width="350"
